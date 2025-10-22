@@ -1,0 +1,92 @@
+/* Genel Sayfa ve Font Ayarları */
+body { margin: 0; font-family: 'Roboto', sans-serif; background: url('yavrum.png') center center no-repeat fixed; background-size: cover; position: relative; overflow: hidden; }
+body::before { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(255, 182, 193, 0.9), rgba(255, 192, 203, 0.8)); z-index: -1; }
+
+/* Başlangıç Ekranı */
+.baslangic-ekrani { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000; display: flex; justify-content: center; align-items: center; z-index: 100; transition: opacity 1s ease-out; }
+#startButton { padding: 15px 30px; font-size: 20px; color: white; background-color: #db3434; border: none; border-radius: 30px; cursor: pointer; font-weight: bold; }
+
+/* Şifre Ekranı Stilleri */
+.sifre-ekrani { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 110; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
+.sifre-ekrani.visible { opacity: 1; pointer-events: auto; }
+.sifre-kutusu { background: white; padding: 30px 40px; border-radius: 15px; text-align: center; box-shadow: 0 5px 25px rgba(0,0,0,0.5); }
+.sifre-kutusu h2 { font-family: 'Lora', serif; margin-top: 0; }
+.sifre-hint { font-size: 0.9em; color: #888; margin: -10px 0 15px 0; }
+#sifreInput { display: block; width: 150px; margin: 0 auto 15px auto; padding: 10px; font-size: 1.5em; text-align: center; border: 2px solid #ddd; border-radius: 8px; }
+#sifreButton { padding: 10px 25px; font-size: 1em; color: white; background-color: #4CAF50; border: none; border-radius: 8px; cursor: pointer; }
+.hata-mesaji { color: #db3434; height: 20px; font-weight: bold; }
+@keyframes shake-input { 10%, 90% { transform: translateX(-2px); } 20%, 80% { transform: translateX(2px); } 30%, 50%, 70% { transform: translateX(-4px); } 40%, 60% { transform: translateX(4px); } }
+#sifreInput.error { animation: shake-input 0.5s ease-in-out; border-color: #db3434; }
+
+/* Ekran Karartma Stili */
+#screen-fade-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #000; opacity: 0; pointer-events: none; z-index: 1000; transition: opacity 2s ease-in-out; }
+#screen-fade-overlay.visible { opacity: 1; }
+
+/* Final Yazı Animasyonu Stilleri */
+#final-typing-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; text-align: center; z-index: 1050; opacity: 0; pointer-events: none; transition: opacity 1s ease-in; }
+#final-typing-container.visible { opacity: 1; }
+#final-typing-text { font-family: 'Lora', serif; font-size: 3.5em; color: #fff; text-shadow: 0 0 8px rgba(255, 255, 255, 0.7); }
+.typed-char { display: inline-block; transition: text-shadow 0.2s ease-out; }
+.typed-char.glow { text-shadow: 0 0 10px #fff, 0 0 25px #fff, 0 0 40px #ffc0cb; }
+
+/* Uçuşan Kalpler ve Diğer Stiller */
+@keyframes floatingHearts { 0% { transform: translateY(100vh) rotate(0deg); opacity: 0; } 10% { opacity: 0.8; } 90% { opacity: 0.8; } 100% { transform: translateY(-100px) rotate(720deg); opacity: 0; } }
+.heart { position: fixed; bottom: -50px; font-size: 24px; color: rgba(255, 105, 180, 0.7); z-index: 0; animation: floatingHearts 15s linear infinite; pointer-events: none; }
+.kitaplik-container { width: 100vw; height: 100vh; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 1.5s ease-in, filter 0.5s ease; }
+body.blur-active .kitaplik-container { filter: blur(8px); }
+.kitaplik-container.visible { display: flex; opacity: 1; }
+.bookshelf { display: flex; gap: 25px; transition: transform 0.5s ease, opacity 0.5s ease; }
+@keyframes shake { 10%, 90% { transform: translateX(-2px); } 20%, 80% { transform: translateX(2px); } 30%, 50%, 70% { transform: translateX(-4px); } 40%, 60% { transform: translateX(4px); } }
+.book.shake { animation: shake 0.5s ease-in-out; }
+.book { width: 60px; height: 350px; cursor: pointer; transition: transform 0.3s ease; }
+.book:not(.locked):hover { transform: translateY(-15px); }
+.book.locked { filter: grayscale(100%) brightness(0.5); cursor: not-allowed; }
+.book-cover { width: 100%; height: 100%; border-radius: 4px 2px 2px 4px; box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.4), inset -2px 0 0 rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: center; }
+.spine-text { color: white; font-family: 'Lora', serif; font-weight: bold; font-size: 22px; writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); }
+.book[data-book-id="1"] .book-cover { background: linear-gradient(to right, #a52a2a, #8b0000); }
+.book[data-book-id="2"] .book-cover { background: linear-gradient(to right, #006400, #004d00); }
+.book[data-book-id="3"] .book-cover { background: linear-gradient(to right, #4682b4, #2c5d87); }
+.book[data-book-id="4"] .book-cover { background: linear-gradient(to right, #800080, #4b0082); }
+.book[data-book-id="5"] .book-cover { background: linear-gradient(to right, #2f4f4f, #1e3636); }
+.reading-view { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: transparent; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; z-index: 1010; }
+.kitaplik-container.reading-mode .bookshelf { transform: scale(0.8); opacity: 0; pointer-events: none; }
+.kitaplik-container.reading-mode .reading-view { opacity: 1; pointer-events: auto; }
+.reading-panel { width: 90%; max-width: 600px; height: 80%; max-height: 700px; background-color: #fdfdfd; border-radius: 8px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); padding: 30px; overflow-y: auto; transform: scale(0.9); transition: transform 0.5s ease, background-color 0.5s; }
+.kitaplik-container.reading-mode .reading-panel { transform: scale(1); }
+.close-reading-view { position: absolute; top: 20px; right: 30px; background: none; border: none; color: white; font-size: 40px; font-weight: bold; cursor: pointer; }
+.message-box { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); background: rgba(255, 255, 255, 0.95); padding: 20px; border-radius: 15px; box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3); text-align: center; opacity: 0; transition: all 0.5s ease; z-index: 1020; pointer-events: none; }
+.message-box.show { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: auto; }
+.photo-container img { max-width: 300px; max-height: 300px; border-radius: 10px; }
+.message { font-family: 'Lora', serif; font-size: 1.2em; color: #333; margin-top: 15px; }
+.page { display: none; }
+.page.active { display: block; animation: fadeIn 0.5s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.page h1, .page h2, .page p { transition: filter 0.5s ease; }
+.question { margin-top: 30px; transition: filter 0.5s ease; }
+body.blur-active .reading-panel .page h1, body.blur-active .reading-panel .page h2, body.blur-active .reading-panel .page p, body.blur-active .reading-panel .question { filter: blur(5px); pointer-events: none; }
+.answer-btn, .next-book-btn, .go-to-next-page-btn { display: block; width: 100%; padding: 15px; margin-top: 10px; background: #f0f0f0; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; transition: background-color 0.2s, transform 0.2s; font-size: 1.1em; text-align: left; }
+.answer-btn:hover { background: #e0e0e0; transform: scale(1.02); }
+.next-book-btn, .go-to-next-page-btn { background: #db3434; color: white; font-weight: bold; text-align: center; }
+
+/* YENİ: Video sayfası için özel stiller */
+.page.video-container-page { display: flex; justify-content: center; align-items: center; height: 100%; padding: 0; }
+.reading-panel:has(.video-container-page) { background-color: transparent; box-shadow: none; }
+.page.video-container-page video { max-width: 90%; max-height: 90%; border-radius: 8px; box-shadow: 0 0 30px rgba(255, 255, 255, 0.15); }
+
+/* Final fotoğraf overlay (siyah arka plan, kenar parlaması, yalnızca ikimiz ambiyansı) */
+#final-photo-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+#final-photo-overlay.visible { opacity: 1; pointer-events: auto; }
+.final-photo-img { max-width: 90%; max-height: 90%; border-radius: 8px; box-shadow: 0 0 40px 8px rgba(255, 255, 255, 0.08), 0 0 80px 16px rgba(255, 182, 193, 0.12); transition: transform 0.6s ease, filter 0.4s ease; transform: scale(0.98); }
+.final-photo-img:hover { transform: scale(1.01); }
+
+/* Kenar parlaması (vinyet ve glow) */
+.final-photo-img::after { content: ''; position: absolute; inset: 0; border-radius: 8px; box-shadow: 0 0 40px 12px rgba(255, 182, 193, 0.25); pointer-events: none; }
+
+/* Fotoğraf konteyner'ı pozisyonlanmış olmalı ki ::after çalışsın */
+#final-photo-overlay img { position: relative; }
+
+/* Küçük ekranlar için ayar */
+@media (max-width: 480px) {
+	.final-photo-img { max-width: 95%; max-height: 85%; border-radius: 6px; }
+	#final-typing-text { font-size: 2em; }
+}

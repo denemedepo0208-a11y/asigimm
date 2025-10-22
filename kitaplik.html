@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitaplık</title>
+    <link rel="stylesheet" href="kitaplik_stil.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="kitaplik-container">
+        <!-- Kitapların Durduğu Raf -->
+        <div class="bookshelf">
+            <div class="book" data-book-id="1">
+                <div class="book-cover">
+                    <span class="spine-text">1. Kırık Kalp</span>
+                </div>
+            </div>
+            <div class="book locked" data-book-id="2">
+                <div class="book-cover">
+                    <span class="spine-text">2. Sen Benim Işığımsın</span>
+                </div>
+            </div>
+            <div class="book locked" data-book-id="3">
+                <div class="book-cover">
+                    <span class="spine-text">3. Sessizliğin Sesi</span>
+                </div>
+            </div>
+            <div class="book locked" data-book-id="4">
+                <div class="book-cover">
+                    <span class="spine-text">4. Sana Giden Yol</span>
+                </div>
+            </div>
+            <div class="book locked" data-book-id="5">
+                <div class="book-cover">
+                    <span class="spine-text">5. Bizim Hikayemiz</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kitap Açıldığında Görünecek Okuma Alanı -->
+        <div class="reading-view">
+            <div class="reading-panel">
+                <!-- Kitap içeriği buraya dinamik olarak gelecek -->
+            </div>
+            <button class="close-reading-view" title="Rafa Geri Dön">&times;</button>
+        </div>
+    </div>
+
+    <script src="kitaplik_script.js"></script>
+</body>
+</html>
