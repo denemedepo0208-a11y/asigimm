@@ -16,9 +16,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeButton = document.querySelector('.close-reading-view');
     const screenFadeOverlay = document.getElementById('screen-fade-overlay');
     const finalTypingContainer = document.getElementById('final-typing-container');
+    const finalPhotoContainer = document.getElementById('final-photo-container');
 
     // --- BAŞLANGIÇ VE ŞİFRE MANTIĞI ---
     startButton.addEventListener('click', () => {
+        audio.volume = 0.5;
+        audio.play().catch(error => console.log("Müzik başlatılamadı:", error));
+        
         sifreEkrani.classList.add('visible');
         sifreInput.focus();
     });
@@ -45,8 +49,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function deneyimiBaslat() {
         sifreEkrani.style.display = 'none';
         baslangicEkrani.style.opacity = '0';
-        audio.volume = 0.5;
-        audio.play().catch(error => console.log("Müzik başlatılamadı:", error));
         setTimeout(() => {
             baslangicEkrani.style.display = 'none';
             container.classList.add('visible');
@@ -91,7 +93,6 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="page page-1 active"><h1>Seninle</h1><p>Aramızdaki o kötü mesafeyi sıfırlamak istiyorum. Bu hikayenin sonunda ne olalım?</p><div class="question"><button class="answer-btn" data-correct="false">A) "İki yabancı"</button><button class="answer-btn" data-correct="true">B) "Biz"</button><button class="answer-btn" data-correct="false">C) "Sadece arkadaş"</button></div></div>
             <div class="page page-2"><h1>Tek İsteğim...</h1><p>Tek isteğim, hayalim ve geleceğim bu: BİZ olmak. Her şeye yeniden başlamak.</p><button class="go-to-next-page-btn">Sonraki Sayfa</button></div>
             <div class="page page-3"><h2>Son Kitap</h2><p>Sana hazırladığım son bir sürpriz var. Lütfen son kitabı açmadan önce biraz bekle daha sana anlatamadığım tüm anılarımızı aklından geçir.</p><button class="next-book-btn">Sonra sıradaki kitabı aç</button></div>`,
-        // DÜZELTİLDİ: Gereksiz metinler kaldırıldı ve video için özel bir sınıf eklendi.
         5: `
             <div class="page page-1 active video-container-page">
                 <video controls autoplay>
@@ -102,19 +103,29 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     let audioFadeInterval;
-    function fadeAudio(direction) {
+    // DÜZELTME: Fonksiyon artık bir "callback" alabiliyor.
+    function fadeAudio(direction, callback) {
         clearInterval(audioFadeInterval);
         const targetVolume = direction === 'out' ? 0 : 0.5;
         const startVolume = audio.volume;
         const duration = 1500;
         let currentTime = 0;
+        
+        // Eğer zaten çalmaya çalışmıyorsa ve sesi açıyorsak, önce çal
+        if (direction === 'in' && audio.paused) {
+            audio.play().catch(e => {});
+        }
+
         audioFadeInterval = setInterval(() => {
             currentTime += 50;
             const newVolume = startVolume + (targetVolume - startVolume) * (currentTime / duration);
             audio.volume = Math.max(0, Math.min(0.5, newVolume));
+
             if (currentTime >= duration) {
                 clearInterval(audioFadeInterval);
                 if (targetVolume === 0) audio.pause();
+                // İşlem bittiğinde callback'i çalıştır (varsa)
+                if (callback) callback();
             }
         }, 50);
     }
@@ -132,16 +143,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function openBook(bookId) {
         if (bookId === '5') {
-            fadeAudio('out');
-            screenFadeOverlay.classList.add('visible');
-            setTimeout(() => {
+            screenFadeOverlay.classList.add('visible'); // Önce ekranı karart
+            
+            // DÜZELTME: Müziği kıs ve bittiğinde videoyu başlat
+            fadeAudio('out', () => {
+                // Bu kod, sadece müzik tamamen durduğunda çalışır
                 readingPanel.innerHTML = bookContents[bookId];
                 container.classList.add('reading-mode');
                 const video = readingPanel.querySelector('video');
                 if (video) {
+                    video.play(); // autoplay'e ek olarak manuel başlatma daha güvenilirdir
                     video.addEventListener('ended', handleVideoEnd);
                 }
-            }, 2000);
+            });
         } else {
             showPhotoAndMessage(bookId);
             readingPanel.innerHTML = bookContents[bookId];
@@ -155,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
         readingView.style.pointerEvents = 'none';
         setTimeout(() => {
             finalTypingContainer.classList.add('visible');
-            startTypingAnimation("Tek İsteğim.\nTek Arzum.\nHayatım Aklımdaki Ve Kalbimdeki tek kişi oldun\nherzaman seni seviyorumm\n💖", "final-typing-text", 150);
+            startTypingAnimation("Tek İsteğim.\nTek Arzum.\nHayatım Aklımdaki Ve \nKalbimdeki tek kişi oldun\nherzaman seni seviyorumm", "final-typing-text", 150);
         }, 1000);
     }
     
@@ -166,47 +180,25 @@ document.addEventListener('DOMContentLoaded', function() {
         const typingInterval = setInterval(() => {
             if (charIndex < text.length) {
                 const char = text.charAt(charIndex);
-                const span = document.createElement('span');
-                span.className = 'typed-char';
-                span.textContent = char === ' ' ? '\u00A0' : char;
-                textElement.appendChild(span);
-                setTimeout(() => span.classList.add('glow'), 10);
-                setTimeout(() => span.classList.remove('glow'), 250);
+                 if (char === '\n') {
+                    textElement.appendChild(document.createElement('br'));
+                } else {
+                    const span = document.createElement('span');
+                    span.className = 'typed-char';
+                    span.textContent = char === ' ' ? '\u00A0' : char;
+                    textElement.appendChild(span);
+                    setTimeout(() => span.classList.add('glow'), 10);
+                    setTimeout(() => span.classList.remove('glow'), 250);
+                }
                 charIndex++;
             } else {
                 clearInterval(typingInterval);
-                // Typing tamamlandığında final fotoğrafı göster
-                // small delay to let last glow animate
                 setTimeout(() => {
-                    showFinalPhoto();
-                }, 400);
+                    finalTypingContainer.style.opacity = '0';
+                    finalPhotoContainer.classList.add('visible');
+                }, 2000);
             }
         }, speed);
-    }
-
-    // Final fotoğrafı overlay ile gösterme
-    function showFinalPhoto() {
-        // Eğer zaten görünürse tekrar etme
-        if (document.getElementById('final-photo-overlay')) return;
-        // Karartılmış arkaplan overlay'i
-        const overlay = document.createElement('div');
-        overlay.id = 'final-photo-overlay';
-        overlay.className = 'final-photo-overlay visible';
-
-        // Fotoğraf elementi
-        const img = document.createElement('img');
-        img.src = 'foto6.jpg';
-        img.alt = 'Son Fotoğraf';
-        img.className = 'final-photo-img';
-
-        // Ek açıklama veya istenirse kapatma butonu (tıklayınca kapanır)
-        overlay.appendChild(img);
-        overlay.addEventListener('click', () => {
-            overlay.classList.remove('visible');
-            setTimeout(() => overlay.remove(), 500);
-        });
-
-        document.body.appendChild(overlay);
     }
 
     function showPhotoAndMessage(bookId) {
@@ -275,9 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function closeBook() {
         if (screenFadeOverlay.classList.contains('visible')) {
-            if (!audio.paused) audio.pause();
-            audio.play().catch(e => {});
-            fadeAudio('in');
+            fadeAudio('in'); // Videoyu kapatırken müziği geri aç
         }
         document.body.classList.remove('blur-active');
         container.classList.remove('reading-mode');
