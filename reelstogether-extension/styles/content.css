@@ -1,0 +1,355 @@
+/* ReelsTogether Chat Overlay */
+#reelstogether-overlay {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  width: 320px;
+  max-height: 600px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+#reelstogether-overlay.minimized {
+  max-height: 50px;
+}
+
+/* Header */
+.rt-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 12px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.rt-header-title {
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rt-header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.rt-header-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: background 0.3s;
+}
+
+.rt-header-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Participants */
+.rt-participants {
+  background: #f5f5f5;
+  padding: 10px 15px;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 12px;
+  color: #666;
+}
+
+.rt-participants-list {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-top: 5px;
+}
+
+.rt-participant {
+  background: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rt-participant.owner {
+  background: #667eea;
+  color: white;
+}
+
+/* Messages */
+.rt-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 400px;
+}
+
+.rt-message {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rt-message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.rt-message-author {
+  font-weight: 600;
+  font-size: 12px;
+  color: #667eea;
+}
+
+.rt-message-time {
+  font-size: 10px;
+  color: #999;
+}
+
+.rt-message-content {
+  background: #f9f9f9;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  color: #333;
+  word-wrap: break-word;
+}
+
+.rt-message.own .rt-message-content {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.rt-message.system .rt-message-content {
+  background: #fff3cd;
+  color: #856404;
+  text-align: center;
+  font-style: italic;
+}
+
+/* Input */
+.rt-input-container {
+  padding: 12px 15px;
+  border-top: 1px solid #e0e0e0;
+  background: white;
+}
+
+.rt-input-wrapper {
+  display: flex;
+  gap: 8px;
+}
+
+.rt-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 20px;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.rt-input:focus {
+  border-color: #667eea;
+}
+
+.rt-input:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.rt-send-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: transform 0.3s;
+}
+
+.rt-send-btn:hover {
+  transform: scale(1.1);
+}
+
+.rt-send-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Sync Indicator */
+.rt-sync-indicator {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(102, 126, 234, 0.95);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  z-index: 999998;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  animation: fadeInOut 2s ease;
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0; }
+  10%, 90% { opacity: 1; }
+}
+
+.rt-sync-indicator.show {
+  display: flex;
+}
+
+/* Scrollbar */
+.rt-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.rt-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.rt-messages::-webkit-scrollbar-thumb {
+  background: #667eea;
+  border-radius: 3px;
+}
+
+.rt-messages::-webkit-scrollbar-thumb:hover {
+  background: #5568d3;
+}
+
+/* Notification Badge */
+.rt-notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ff4757;
+  color: white;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+/* Join Request Notification */
+.rt-join-request {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 300px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  z-index: 1000000;
+  animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.rt-join-request-header {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.rt-join-request-body {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.rt-join-request-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.rt-join-request-btn {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.rt-join-request-btn.accept {
+  background: #667eea;
+  color: white;
+}
+
+.rt-join-request-btn.accept:hover {
+  background: #5568d3;
+}
+
+.rt-join-request-btn.reject {
+  background: #f5f5f5;
+  color: #333;
+}
+
+.rt-join-request-btn.reject:hover {
+  background: #e0e0e0;
+}

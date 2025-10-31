@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReelsTogether</title>
+  <link rel="stylesheet" href="styles/popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>🎬 ReelsTogether</h1>
+      <div class="user-info" id="userInfo">
+        <span id="username">Kullanıcı</span>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="discover">🏠 Keşfet</button>
+      <button class="tab-btn" data-tab="create">➕ Oda Oluştur</button>
+      <button class="tab-btn" data-tab="join">🔑 Koda Katıl</button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+      <!-- Discover Tab -->
+      <div class="tab-pane active" id="discover">
+        <div class="search-bar">
+          <input type="text" id="searchRooms" placeholder="Oda ara...">
+          <select id="categoryFilter">
+            <option value="">Tüm Kategoriler</option>
+            <option value="eglence">Eğlence</option>
+            <option value="ask">Aşk</option>
+            <option value="komedi">Komedi</option>
+            <option value="muzik">Müzik</option>
+            <option value="spor">Spor</option>
+          </select>
+        </div>
+        <div class="rooms-list" id="roomsList">
+          <div class="loading">Odalar yükleniyor...</div>
+        </div>
+      </div>
+
+      <!-- Create Room Tab -->
+      <div class="tab-pane" id="create">
+        <form id="createRoomForm">
+          <div class="form-group">
+            <label>Oda Adı</label>
+            <input type="text" id="roomName" placeholder="Örn: Berkin Keşfeti ❤️" required>
+          </div>
+
+          <div class="form-group">
+            <label>Oda Tipi</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="roomType" value="public" checked>
+                <span>🌍 Public (Keşfet'te görünür)</span>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="roomType" value="private">
+                <span>🔒 Private (Sadece kod ile)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group" id="publicOptions">
+            <label>Kategori</label>
+            <select id="roomCategory" required>
+              <option value="eglence">Eğlence</option>
+              <option value="ask">Aşk</option>
+              <option value="komedi">Komedi</option>
+              <option value="muzik">Müzik</option>
+              <option value="spor">Spor</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Maksimum Kişi Sayısı</label>
+            <select id="maxParticipants">
+              <option value="2">2 Kişi</option>
+              <option value="3">3 Kişi</option>
+              <option value="4">4 Kişi</option>
+              <option value="5">5 Kişi</option>
+              <option value="10">10 Kişi</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Oda Oluştur</button>
+        </form>
+      </div>
+
+      <!-- Join Room Tab -->
+      <div class="tab-pane" id="join">
+        <form id="joinRoomForm">
+          <div class="form-group">
+            <label>Oda Kodu</label>
+            <input type="text" id="roomCode" placeholder="Örn: 783421" required maxlength="6">
+          </div>
+          <button type="submit" class="btn btn-primary">Odaya Katıl</button>
+        </form>
+
+        <div class="divider">veya</div>
+
+        <div class="current-room" id="currentRoom" style="display: none;">
+          <h3>Aktif Oda</h3>
+          <div class="room-info">
+            <div class="room-name" id="currentRoomName"></div>
+            <div class="room-code" id="currentRoomCode"></div>
+            <div class="room-participants" id="currentRoomParticipants"></div>
+          </div>
+          <button class="btn btn-secondary" id="copyRoomLink">📋 Bağlantı Kopyala</button>
+          <button class="btn btn-danger" id="leaveRoom">🚪 Odadan Ayrıl</button>
+          <button class="btn btn-settings" id="roomSettings">⚙️ Oda Ayarları</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <span id="connectionStatus">🔴 Bağlantı yok</span>
+    </div>
+  </div>
+
+  <!-- Room Settings Modal -->
+  <div class="modal" id="settingsModal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>⚙️ Oda Ayarları</h2>
+        <button class="close-btn" id="closeSettings">✕</button>
+      </div>
+      <div class="modal-body">
+        <h3>Katılımcılar</h3>
+        <div id="participantsList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Join Request Modal -->
+  <div class="modal" id="joinRequestModal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>🔔 Katılım İsteği</h2>
+      </div>
+      <div class="modal-body">
+        <p><strong id="requesterName"></strong> odanıza katılmak istiyor.</p>
+        <div class="modal-actions">
+          <button class="btn btn-primary" id="acceptRequest">✓ Kabul Et</button>
+          <button class="btn btn-danger" id="rejectRequest">✕ Reddet</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
